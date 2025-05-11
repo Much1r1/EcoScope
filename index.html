@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoInsight | AI Environmental Impact Analyzer</title>
+  <title>EcoScope | AI Environmental Impact Analyzer</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -11,6 +11,237 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   
+  <style id="app-style">
+    :root {
+      --primary: #34D399;
+      --primary-dark: #10B981;
+      --secondary: #38BDF8;
+      --secondary-dark: #0EA5E9;
+      --text-dark: #1F2937;
+      --text-light: #F9FAFB;
+      --bg-light: #F3F4F6;
+      --danger: #F87171;
+      --warning: #FBBF24;
+      --success: #34D399;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      background-color: var(--bg-light);
+      overflow-x: hidden;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+    }
+    
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .metric-card {
+      border-radius: 1rem;
+      background: white;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .metric-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .recommendation-item {
+      border-radius: 0.75rem;
+      transition: all 0.3s ease;
+    }
+    
+    .recommendation-item:hover {
+      transform: translateX(5px);
+    }
+    
+    .recommendation-icon {
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .progress-bar {
+      height: 5px;
+      background-color: #E5E7EB;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-value {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      transition: width 0.5s ease;
+    }
+    
+    .form-section {
+      border-radius: 0.75rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-section-header {
+      cursor: pointer;
+      padding: 1rem;
+      font-weight: 600;
+    }
+    
+    .form-section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    
+    .form-section.active .form-section-content {
+      max-height: 1000px;
+    }
+    
+    .form-control {
+      border: 1px solid #E5E7EB;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+      outline: none;
+    }
+    
+    .loader {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+    
+    .loader:after {
+      content: " ";
+      display: block;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      border: 6px solid var(--primary);
+      border-color: var(--primary) transparent var(--secondary) transparent;
+      animation: loader 1.2s linear infinite;
+    }
+    
+    @keyframes loader {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    
+    .sparkline {
+      position: relative;
+      height: 30px;
+      width: 100%;
+    }
+    
+    .impact-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .impact-badge.low {
+      background-color: #D1FAE5;
+      color: #059669;
+    }
+    
+    .impact-badge.medium {
+      background-color: #FEF3C7;
+      color: #D97706;
+    }
+    
+    .impact-badge.high {
+      background-color: #FEE2E2;
+      color: #DC2626;
+    }
+    
+    .page-transition {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .page-hidden {
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+    }
+    
+    .dropzone {
+      border: 2px dashed #E5E7EB;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background-color: rgba(52, 211, 153, 0.05);
+    }
+    
+    @media (max-width: 768px) {
+      .metric-card {
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Navigation -->
@@ -18,7 +249,7 @@
     <div class="container mx-auto px-4 py-3">
       <div class="flex justify-between items-center">
         <div class="flex items-center">
-          <div class="text-2xl font-bold text-gradient">EcoInsight</div>
+          <div class="text-2xl font-bold text-gradient">EcoScope</div>
         </div>
         <div class="flex items-center space-x-4">
           <button id="language-toggle" class="text-gray-600 hover:text-gray-900">
@@ -39,25 +270,28 @@
   </nav>
 
   <!-- Splash Screen -->
-  <div id="splash-screen" class="page-transition min-h-screen flex flex-col items-center justify-center p-4 text-center">
-    <div class="animate__animated animate__fadeIn max-w-3xl">
-      <h1 class="text-4xl md:text-5xl font-bold mb-6 text-gradient">AI Environmental Impact Analyzer</h1>
-      <p class="text-xl text-gray-600 mb-8">Analyze your environmental footprint and discover personalized strategies to reduce your impact on the planet.</p>
-      <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-        <button id="get-started-btn" class="btn-primary text-lg px-8 py-3 rounded-full font-semibold shadow-lg">
-          Get Started
-          <i class="fas fa-arrow-right ml-2"></i>
-        </button>
-        <button id="learn-more-btn" class="bg-white text-gray-700 text-lg px-8 py-3 rounded-full font-semibold shadow-lg border border-gray-200 hover:bg-gray-50">
+    <div id="splash-screen" class="relative h-screen overflow-hidden flex items-center justify-center text-center px-4 py-8">
+        <!-- Background Image -->
+       <img src="images/image1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-30 -z-10">
+  
+       <!-- Foreground Content -->
+       <div class="animate__animated animate__fadeIn max-w-3xl z-10">
+         <h1 class="text-3xl md:text-5xl font-bold mb-4 text-gradient">AI Environmental Impact Analyzer</h1>
+         <p class="text-lg md:text-xl text-gray-700 mb-6">Analyze your environmental footprint and discover personalized strategies to reduce your impact on the planet.</p>
+         <div class="flex flex-col sm:flex-row justify-center gap-4">
+           <button id="get-started-btn" class="btn-primary text-lg px-8 py-3 rounded-full font-semibold shadow-lg">
+            Get Started
+            <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+          <button id="learn-more-btn" class="bg-white text-gray-700 text-lg px-8 py-3 rounded-full font-semibold shadow-lg border border-gray-200 hover:bg-gray-50">
           Learn More
           <i class="fas fa-info-circle ml-2"></i>
-        </button>
-      </div>
-      <div class="mt-16">
-        <img src="https://cdn.pixabay.com/photo/2018/10/21/11/14/ecology-3762975_960_720.png" alt="Environmental Analysis" class="max-w-full h-auto mx-auto" style="max-height: 300px;">
-      </div>
+          </button>
+         </div>
+       </div>
     </div>
-  </div>
+  
+  
 
   <!-- Input Form Screen -->
   <div id="input-screen" class="page-transition page-hidden min-h-screen py-8 px-4">
@@ -233,7 +467,7 @@
   <div id="loading-screen" class="page-transition page-hidden fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
     <div class="loader mb-6"></div>
     <h3 class="text-2xl font-bold mb-2">Analyzing Your Environmental Impact...</h3>
-    <p class="text-gray-600 text-center max-w-md mb-6">Our AI is processing your data to provide personalized insights.</p>
+    <p class="text-gray-600 text-center max-w-md mb-6">The AI is processing your data to provide personalized insights.</p>
     <div class="w-full max-w-md px-4">
       <div class="progress-bar">
         <div id="progress-value" class="progress-value" style="width: 0%"></div>
@@ -458,5 +692,221 @@
     </div>
   </div>
 
+  <script id="app-script">
+    $(document).ready(function() {
+      // Navigation between screens
+      function showScreen(screenId) {
+        $('.page-transition').addClass('page-hidden');
+        setTimeout(() => {
+          $(`#${screenId}`).removeClass('page-hidden');
+        }, 100);
+      }
+      
+      // Initialize with splash screen
+      showScreen('splash-screen');
+      
+      // Get Started button click
+      $('#get-started-btn').click(function() {
+        showScreen('input-screen');
+      });
+      
+      // Form section toggle
+      $('.form-section-header').click(function() {
+        const section = $(this).closest('.form-section');
+        section.toggleClass('active');
+        if (section.hasClass('active')) {
+          $(this).find('i.fas').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        } else {
+          $(this).find('i.fas').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
+      });
+      
+      // File upload handling
+      $('#dropzone').click(function() {
+        $('#file-upload').click();
+      });
+      
+      $('#dropzone').on('dragover', function(e) {
+        e.preventDefault();
+        $(this).addClass('dragover');
+      });
+      
+      $('#dropzone').on('dragleave', function(e) {
+        e.preventDefault();
+        $(this).removeClass('dragover');
+      });
+      
+      $('#dropzone').on('drop', function(e) {
+        e.preventDefault();
+        $(this).removeClass('dragover');
+        
+        const files = e.originalEvent.dataTransfer.files;
+        if (files.length > 0) {
+          const file = files[0];
+          if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+            handleCsvFile(file);
+          } else {
+            alert('Please upload a CSV file.');
+          }
+        }
+      });
+      
+      $('#file-upload').change(function() {
+        const file = this.files[0];
+        if (file) {
+          handleCsvFile(file);
+        }
+      });
+      
+      function handleCsvFile(file) {
+        // In the prototype, we just show the filename
+        const filename = file.name;
+        $('#dropzone p').text(`Selected: ${filename}`);
+      }
+      
+      // Analyze button click - show loading screen
+      $('#analyze-btn').click(function() {
+        showScreen('loading-screen');
+        simulateLoading();
+      });
+      
+      // Simulate loading progress
+      function simulateLoading() {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 5;
+          $('#progress-value').css('width', `${progress}%`);
+          
+          if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              showScreen('results-screen');
+              initCharts();
+            }, 500);
+          }
+        }, 200);
+      }
+      
+      // Restart button
+      $('#restart-btn').click(function() {
+        showScreen('input-screen');
+      });
+      
+      // Recommendation filters
+      $('.recommendation-filter').click(function() {
+        $('.recommendation-filter').removeClass('active bg-green-500 text-white').addClass('bg-gray-200');
+        $(this).addClass('active bg-green-500 text-white').removeClass('bg-gray-200');
+      });
+      
+      // Initialize charts when results screen is shown
+      function initCharts() {
+        // Carbon footprint chart
+        const carbonCtx = document.getElementById('carbon-chart').getContext('2d');
+        new Chart(carbonCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              data: [5.8, 5.6, 5.5, 5.3, 5.2, 5.2],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+        
+        // Water usage chart
+        const waterCtx = document.getElementById('water-chart').getContext('2d');
+        new Chart(waterCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              data: [75, 78, 80, 83, 85, 82],
+              borderColor: '#0EA5E9',
+              backgroundColor: 'rgba(14, 165, 233, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+        
+        // Energy usage chart
+        const energyCtx = document.getElementById('energy-chart').getContext('2d');
+        new Chart(energyCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              data: [450, 440, 435, 425, 420, 420],
+              borderColor: '#FBBF24',
+              backgroundColor: 'rgba(251, 191, 36, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+        
+        // Waste generation chart
+        const wasteCtx = document.getElementById('waste-chart').getContext('2d');
+        new Chart(wasteCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              data: [4.5, 4.2, 3.9, 3.7, 3.5, 3.4],
+              borderColor: '#8B5CF6',
+              backgroundColor: 'rgba(139, 92, 246, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+      }
+      
+      // Export buttons
+      $('#export-pdf-btn, #export-csv-btn, #share-results-btn').click(function() {
+        alert("This is a prototype. In the full version, this functionality will be connected to a real API.");
+      });
+      
+      // Profile and language toggles
+      $('#profile-button, #language-toggle, #share-button, #learn-more-btn').click(function() {
+        alert("This is a prototype. In the full version, this functionality will be connected to a real API.");
+      });
+    });
+  </script>
 </body>
 </html>
