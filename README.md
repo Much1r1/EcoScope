@@ -1,5 +1,5 @@
 
-# 🌍 EcoScope: An AI-Powered Environmental Impact Analyzer
+# 🌍 EcoScope: An AI-Powered Environmental Impact Analyzer (Prototype)
 
 An AI-powered web application that helps organizations and individuals assess the environmental impact of their actions, policies, or projects. The analyzer uses artificial intelligence to provide insights, recommendations, and visualizations for improving sustainability.
 
