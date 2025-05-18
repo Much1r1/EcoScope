@@ -22,7 +22,7 @@ An AI-powered web application that helps organizations and individuals assess th
 ## 🛠️ Installation
 
 # Clone the repository
-git clone https://github.com/Much1r1/environment-impact-analyzer.git
+git clone https://github.com/Much1r1/EcoScope.git
 
 # Install dependencies
 npm install
