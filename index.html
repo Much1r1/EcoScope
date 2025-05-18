@@ -25,7 +25,7 @@
       --success: #34D399;
     }
     
-    body {
+    html {
       font-family: 'Inter', sans-serif;
       color: var(--text-dark);
       background-color: var(--bg-light);
@@ -65,13 +65,17 @@
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
     }
     
-    .card {
+    .card{
       border-radius: 1rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
       background: white;
+      color: blue;
     }
-    
+    #input-screen > h2{
+      color: blue;
+    }
+
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
@@ -235,15 +239,83 @@
       border-color: var(--primary);
       background-color: rgba(52, 211, 153, 0.05);
     }
-    
+    /* Light Theme (default) */
+    body {
+     background-color: white;
+     color: #111;
+     transition: background 0.5s ease, color 0.3s ease;
+    }
+
+     /* Dark Theme */
+    body.dark-mode {
+      background-color: #111;
+      
+    }
+
+    /* Optional: Style for the toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1.2rem;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    body.dark-mode .theme-toggle {
+     background: #333;
+     color: white;
+    }
+
+    .metric-badge.green {
+     background-color: var(--color-green);
+     color: white;
+    }
+
+    .metric-badge.blue {
+      background-color: var(--color-blue);
+      color: white;
+    }
+
+    .metric-badge.orange {
+     background-color: var(--color-orange);
+     color: white;
+    }
+
+    .metric-badge.purple {
+     background-color: var(--color-purple);
+     color: white;
+    }
+
+   .card {
+     background-color: var(--bg-color);
+     color: var(--text-color);
+    }
+
     @media (max-width: 768px) {
       .metric-card {
         margin-bottom: 1rem;
       }
     }
+
+    @media (prefers-color-scheme: dark) {
+     :root {
+       /* Dark Mode - DARKER Backgrounds for badges */
+       --color-green: #064e3b;   /* emerald-900 */
+       --color-blue: #1e3a8a;    /* blue-900 */
+       --color-orange: #7c2d12;  /* orange-900 */
+       --color-purple: #4c1d95;  /* violet-900 */
+
+       --bg-color: #1f2937;      /* slate-800 */    /* light text */
+      }
+    }
   </style>
 </head>
 <body>
+
   <!-- Navigation -->
   <nav class="bg-white shadow-sm sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3">
@@ -251,7 +323,7 @@
         <div class="flex items-center">
           <div class="text-2xl font-bold text-gradient">EcoScope</div>
         </div>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-4">         
           <button id="language-toggle" class="text-gray-600 hover:text-gray-900">
             <i class="fas fa-globe"></i>
             <span class="ml-1 hidden md:inline">EN</span>
@@ -263,6 +335,9 @@
           <button id="share-button" class="text-gray-600 hover:text-gray-900">
             <i class="fas fa-share-alt"></i>
             <span class="ml-1 hidden md:inline">Share</span>
+          </button>
+          <button id="toggle-theme" class="theme-toggle">
+            🌙
           </button>
         </div>
       </div>
@@ -296,8 +371,9 @@
   <!-- Input Form Screen -->
   <div id="input-screen" class="page-transition page-hidden min-h-screen py-8 px-4">
     <div class="container mx-auto max-w-4xl">
+    <div class="card">
       <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">Environmental Impact Analysis</h2>
+        <h2 class="text-2xl md:text-3xl font-bold mb-2 envi">Environmental Impact Analysis</h2>
         <p class="text-gray-600 mb-6">Please provide information about your consumption habits to receive a personalized analysis.</p>
         
         <div class="mb-6 flex flex-col md:flex-row items-center justify-between">
@@ -461,10 +537,12 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- Loading Screen -->
   <div id="loading-screen" class="page-transition page-hidden fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+    <div class="card">
     <div class="loader mb-6"></div>
     <h3 class="text-2xl font-bold mb-2">Analyzing Your Environmental Impact...</h3>
     <p class="text-gray-600 text-center max-w-md mb-6">The AI is processing your data to provide personalized insights.</p>
@@ -478,10 +556,12 @@
         <span>Generating insights</span>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- Results Dashboard -->
   <div id="results-screen" class="page-transition page-hidden min-h-screen py-8 px-4">
+    <div class="card">
     <div class="container mx-auto max-w-6xl">
       <h2 class="text-3xl font-bold mb-2">Your Environmental Impact</h2>
       <p class="text-gray-600 mb-8">Here's a breakdown of your environmental footprint and personalized recommendations.</p>
@@ -689,6 +769,7 @@
           Restart Analysis
         </button>
       </div>
+    </div>
     </div>
   </div>
 
@@ -909,4 +990,22 @@
     });
   </script>
 </body>
+<script>
+  const toggleBtn = document.getElementById('toggle-theme');
+  const body = document.body;
+
+  // Load saved preference
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    toggleBtn.textContent = '☀️';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    const isDark = body.classList.contains('dark-mode');
+    toggleBtn.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+</script>
+
 </html>
